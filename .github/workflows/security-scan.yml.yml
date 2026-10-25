@@ -1,0 +1,30 @@
+name: Security & Secret Scan
+
+on:
+  push:
+      branches: [ "main" ]
+        pull_request:
+            branches: [ "main" ]
+
+            jobs:
+              security-audit:
+                  runs-on: ubuntu-latest
+                      steps:
+                            - name: Checkout Code
+                                    uses: actions/checkout@v4
+
+                                          - name: Set up Python
+                                                  uses: actions/setup-python@v5
+                                                          with:
+                                                                    python-version: "3.12"
+
+                                                                          - name: Run Repository Security Scanner
+                                                                                  run: |
+                                                                                            python3 repo_scanner.py --local . --json scan-results.json
+
+                                                                                                  - name: Upload Scan Artifacts
+                                                                                                          if: always()
+                                                                                                                  uses: actions/upload-artifact@v4
+                                                                                                                          with:
+                                                                                                                                    name: security-scan-results
+                                                                                                                                              path: scan-results.json
