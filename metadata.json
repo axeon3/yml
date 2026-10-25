@@ -1,0 +1,6 @@
+{
+  "name": "NeoWS Telemetry Test Hub",
+  "description": "Testing Portal for Near-Earth Object (NEO) Telemetry Dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
