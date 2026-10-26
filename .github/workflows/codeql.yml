@@ -1,0 +1,48 @@
+name: "CodeQL Advanced"
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  schedule:
+    - cron: "20 10 * * 2"
+
+jobs:
+  analyze:
+    name: Analyze (${{ matrix.language }})
+    runs-on: [self-hosted, Linux, X64]
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # JavaScript/TypeScript analyzed directly without build
+          - language: javascript-typescript
+            build_mode: none
+
+          # C# analyzed directly without build (avoids autobuild errors)
+          - language: csharp
+            build_mode: none
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Initializes CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build_mode }}
+
+      # Performs CodeQL Security Analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:${{ matrix.language }}"
